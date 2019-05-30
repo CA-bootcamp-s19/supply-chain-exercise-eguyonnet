@@ -6,25 +6,46 @@ import "../contracts/SupplyChain.sol";
 
 contract TestSupplyChain {
 
+    SupplyChain sc;
+
     // Test for failing conditions in this contracts
     // test that every modifier is working
+    function testAddItem() public {
+        sc = SupplyChain(DeployedAddresses.SupplyChain());
+        bool result = sc.addItem("Chaise", 2000000);
+        Assert.isTrue(result, "Item not added properly");
+        
+        uint state;
+        (, , , state, , ) = sc.fetchItem(0);
+
+        Assert.equal(state, 0, "State should be Forsale");
+    }
+
 
     // buyItem
-
     // test for failure if user does not send enough funds
     // test for purchasing an item that is not for Sale
+    function testBuyItemFailure() public {
+        // For instance check ship item
+        sc.buyItem(0);
+    }
 
 
     // shipItem
-
     // test for calls that are made by not the seller
     // test for trying to ship an item that is not marked Sold
+    function testShipItemFailure() public {
+        // For instance check ship item
+        sc.shipItem(0);
+    }
 
     // receiveItem
-
     // test calling the function from an address that is not the buyer
     // test calling the function on an item not marked Shipped
-
+    function testReceiveItemFailure() public {
+        // For instance check ship item
+        sc.shipItem(0);
+    }
      
 
 
