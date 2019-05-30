@@ -62,12 +62,12 @@ contract SupplyChain {
   }
 
   modifier verifyCaller(address _address) { 
-    require(msg.sender == _address); 
+    require(msg.sender == _address, "Not authorized"); 
     _;
   }
 
   modifier paidEnough(uint _price) { 
-    require(msg.value >= _price); 
+    require(msg.value >= _price, "Give some more"); 
     _;
   }
 
@@ -115,6 +115,7 @@ contract SupplyChain {
 
   /* The seller adds its product */
   function addItem(string memory _name, uint _price) public returns(bool) {
+    // Should check parameters
     emit LogForSale(skuCount);
     items[skuCount] = Item({name: _name, sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: address(0)});
     skuCount = skuCount + 1;
@@ -127,6 +128,7 @@ contract SupplyChain {
     if the buyer paid enough, and check the value after the function is called to make sure the buyer is
     refunded any excess ether sent. Remember to call the event associated with this function!*/
   function buyItem(uint sku) public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku)  {
+    // Should check seller address is not 0 as Forsale = 0 = default value !
     Item storage myItem = items[sku];
     myItem.buyer = msg.sender;
     myItem.seller.transfer(myItem.price);
@@ -150,12 +152,14 @@ contract SupplyChain {
 
   /* We have these functions completed so we can run tests, just ignore it :) */
   function fetchItem(uint _sku) public view returns (string memory name, uint sku, uint price, uint state, address seller, address buyer) {
-    name = items[_sku].name;
-    sku = items[_sku].sku;
-    price = items[_sku].price;
-    state = uint(items[_sku].state);
-    seller = items[_sku].seller;
-    buyer = items[_sku].buyer;
+    // Lower gas with the following version
+    Item storage _item = items[_sku];
+    name = _item.name;
+    sku = _item.sku;
+    price = _item.price;
+    state = uint(_item.state);
+    seller = _item.seller;
+    buyer = _item.buyer;
     return (name, sku, price, state, seller, buyer);
   }
 
