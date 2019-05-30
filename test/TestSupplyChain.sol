@@ -7,6 +7,8 @@ import "../contracts/SupplyChain.sol";
 contract TestSupplyChain {
 
     SupplyChain sc;
+    address buyer = 0x929b1b54a8446f35672D0A00DC1A74C6eE21662d;
+
 
     // Test for failing conditions in this contracts
     // test that every modifier is working
@@ -27,7 +29,7 @@ contract TestSupplyChain {
     // test for purchasing an item that is not for Sale
     function testBuyItemFailure() public {
         // For instance check ship item
-        sc.buyItem(0);
+        sc.buyItem(O); // {from : buyer, value: 300, }
     }
 
 
@@ -44,9 +46,7 @@ contract TestSupplyChain {
     // test calling the function on an item not marked Shipped
     function testReceiveItemFailure() public {
         // For instance check ship item
-        sc.shipItem(0);
+        sc.receiveItem(0);
     }
-     
-
 
 }
