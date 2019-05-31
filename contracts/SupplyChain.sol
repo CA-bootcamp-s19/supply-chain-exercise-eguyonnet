@@ -128,8 +128,9 @@ contract SupplyChain {
     if the buyer paid enough, and check the value after the function is called to make sure the buyer is
     refunded any excess ether sent. Remember to call the event associated with this function!*/
   function buyItem(uint sku) public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku)  {
-    // Should check seller address is not 0 as Forsale = 0 = default value !
     Item storage myItem = items[sku];
+    // Should check seller address is not 0 as Forsale = 0 = default value !
+    require(myItem.seller != address(0), "Item not found");
     myItem.buyer = msg.sender;
     myItem.seller.transfer(myItem.price);
     myItem.state = State.Sold;
